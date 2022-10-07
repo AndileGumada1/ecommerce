@@ -2,22 +2,25 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-# Create your models here.
+
 class Category(models.Model):
-    name = models.CharField(max_length=255,db_index=True)
-    slug = models.SlugField(max_length=255,unique=True)
+    name = models.CharField(max_length=255, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True)
 
     class Meta:
         verbose_name_plural = 'categories'
-    
+
     def get_absolute_url(self):
         return reverse('store:category_list', args=[self.slug])
 
     def __str__(self):
         return self.name
+
+
 class ProductManager(models.Manager):
-      def get_queryset(self):
+    def get_queryset(self):
         return super(ProductManager, self).get_queryset().filter(is_active=True)
+
 
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
